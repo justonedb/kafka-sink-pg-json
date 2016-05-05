@@ -323,7 +323,7 @@ public class PostgreSQLSinkTask extends SinkTask {
               
               if (string.charAt(0)=='"')//if enclosed in quotes
                 iWriter.append(string.substring(1,string.length()-1));//append string without quotation characters
-              else//else not enclosed i quotes
+              else//else not enclosed in quotes
                 iWriter.append(string);//append string value
               
             }//if "null" string
