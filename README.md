@@ -135,6 +135,37 @@ When a non scalar element (object or aray) is passed into a column, the target c
 Where a path does not exist in the JSON message, a null value is placed in the column value. For example /@foo/@bar would return a null
 value from the example message above.
 
+## Internals
+
+For synchronized delivery, a package of pl/pgsql functions is installed in the database.
+
+The package provides the functions for starting, flushing and getting state to ensure synchronized delivery semantics (exactly once) 
+from Kafka to the sink table.
+
+The functions and state information are stored in the "$justone$kafka$connect$sink" schema. Within this schema, each sink table has a 
+corresponding state table called "<s>.<t>" where <s> and <t> are the schema and name of the sink table respectively. 
+A state table contains a row for each topic, partition and offset.
+
+The start() function is called when a Kafka sink task is started. It creates a temporary sink table and also creates a Kafka 
+state table if it does not already exist. The sink task can then insert rows into the temporary sink table.
+
+The state() function returns rows from the state table for a specified sink table. This information can be used by the sink 
+connector to initialise offsets for synchronizing consumption with the table state. Note that this function may return no
+rows if the sink table has not been flushed. 
+
+The flush() function is called during a sink task flush. It copies rows from the temporary sink table to the permanent sink table
+and refreshes the Kafka state information in the state table. This is performed in the same transaction to guarantee 
+synchronization.
+
+The drop() function is called to drop synchronization state if non synchronized delivery is used by the sink task.
+
+Process flow is typically:
+
+   SELECT "$justone$kafka$connect$sink".start(<schema>,<table>);
+   SELECT kafkaTopic,kafkaPartition,kafkaOffset FROM "$justone$kafka$connect$sink".state(<schema>,<table>);
+   insert rows into temporay sink table
+   SELECT "$justone$kafka$connect$sink".flush(<schema>,<table>,<topics>,<partitions>,<offsets>);
+
 ## Dependencies
 
 * JustOne json parser - justone-json-1.0.jar
