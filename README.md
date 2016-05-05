@@ -135,6 +135,12 @@ When a non scalar element (object or aray) is passed into a column, the target c
 Where a path does not exist in the JSON message, a null value is placed in the column value. For example /@foo/@bar would return a null
 value from the example message above.
 
+## Dependencies
+
+* JustOne json parser - justone-json-1.0.jar
+* JustOne pg writer - justone-pg-writer-1.0.jar
+* PostgreSQL JDBC driver - postgresql-9.3-1103.jdbc4.jar
+
 ## Support
 
 Email support@justonedb.com for support.
