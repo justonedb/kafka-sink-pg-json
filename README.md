@@ -143,7 +143,7 @@ The package provides the functions for starting, flushing and getting state to e
 from Kafka to the sink table.
 
 The functions and state information are stored in the "$justone$kafka$connect$sink" schema. Within this schema, each sink table has a 
-corresponding state table called "<s>.<t>" where <s> and <t> are the schema and name of the sink table respectively. 
+corresponding state table called "<schema>.<table>" where <schema> and <table> are the schema and name of the sink table respectively. 
 A state table contains a row for each topic, partition and offset.
 
 The start() function is called when a Kafka sink task is started. It creates a temporary sink table and also creates a Kafka 
