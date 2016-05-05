@@ -168,10 +168,10 @@ The drop() function is called to drop synchronization state if non synchronized 
 
 Process flow is typically:
 
-   SELECT "$justone$kafka$connect$sink".start(<schema>,<table>);
-   SELECT kafkaTopic,kafkaPartition,kafkaOffset FROM "$justone$kafka$connect$sink".state(<schema>,<table>);
-   insert rows into temporay sink table
-   SELECT "$justone$kafka$connect$sink".flush(<schema>,<table>,<topics>,<partitions>,<offsets>);
+    SELECT "$justone$kafka$connect$sink".start(<schema>,<table>);
+    SELECT kafkaTopic,kafkaPartition,kafkaOffset FROM "$justone$kafka$connect$sink".state(<schema>,<table>);
+    ...insert rows into temporay sink table...
+    SELECT "$justone$kafka$connect$sink".flush(<schema>,<table>,<topics>,<partitions>,<offsets>);
 
 ## Dependencies
 
