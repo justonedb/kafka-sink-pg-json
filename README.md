@@ -1,4 +1,4 @@
-# kafka-pg-json-sink-connector
+# kafka-sink-pg-json
 
 ## Description
 
