@@ -32,9 +32,9 @@ The connector provides configuration options for controlling:
 
 ### Jar files
 
-* justone-pg-kafka-sink-json-1.0.jar
+* justone-kafka-sink-pg-json-1.0.jar
 * justone-json-1.0.jar
-* justone-pg-writer-1.0.jar
+* justone-pgwriter-1.0.jar
 * postgresql-9.3-1103.jdbc4.jar
 
 ## Installation
@@ -114,8 +114,8 @@ sink table. A parse path corresponds to the column name in the db.columns proper
 
 A parse path represents an element hierarchy and is expressed as a string element identifiers, separated by a delimiting character (typically /).
 
-* A child element wihin an object is specified using @<key> where <key> is the key of the child element. 
-* A child element within an array is specified using #<index> where <index> is the index of the child element (starting at 0).
+* A child element wihin an object is specified using @key where key is the key of the child element. 
+* A child element within an array is specified using #index where index is the index of the child element (starting at 0).
 
 A path must start with the delimiter used to separate element identifiers. This first character is arbitrary and can be chosen to avoid
 conflict with key names. 
@@ -176,7 +176,7 @@ Process flow is typically:
 ## Dependencies
 
 * JustOne json parser - justone-json-1.0.jar
-* JustOne pg writer - justone-pg-writer-1.0.jar
+* JustOne pg writer - justone-pgwriter-1.0.jar
 * PostgreSQL JDBC driver - postgresql-9.3-1103.jdbc4.jar
 
 ## Support
