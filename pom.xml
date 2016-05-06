@@ -39,14 +39,14 @@
       <version>0.9.0.1</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.justone</groupId>
       <artifactId>justone-json</artifactId>
-      <version>${project.version}</version>
+      <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.justone</groupId>
       <artifactId>justone-pgwriter</artifactId>
-      <version>${project.version}</version>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 </project>
