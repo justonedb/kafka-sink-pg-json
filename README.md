@@ -175,9 +175,9 @@ Process flow is typically:
 
 ## Dependencies
 
+* Kafka Connect API - connect-api-0.9.0.1.jar
 * JustOne json parser - justone-json-1.0.jar
 * JustOne pg writer - justone-pgwriter-1.0.jar
-* PostgreSQL JDBC driver - postgresql-9.3-1103.jdbc4.jar
 
 ## Support
 
