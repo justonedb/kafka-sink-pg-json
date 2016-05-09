@@ -137,9 +137,9 @@ Below are some examples for paths in the following message:
 The data type of a column receiving an element must be compatible with the element value passed to it. 
 When a non scalar element (object or aray) is passed into a column, the target column should be a TEXT, JSON or VARCHAR data type. 
 
-To insert messages in the above format into a table with an id, latitude, longigitude, and acceleration columns, the db.columns and db.json.parse configuration properties would be:
+To insert messages in the above format into a table with an id, latitude, longitude, and acceleration columns, the db.columns and db.json.parse configuration properties would be:
 
-* db.columns = id,latitude,longigitude,acceleration
+* db.columns = id,latitude,longitude,acceleration
 * db.json.parse = /@identity,/@location/@latitude,/@location/@longitude,/@acceleration
 
 Note the corresponding positions between columns and their respective parse paths.
