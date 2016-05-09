@@ -105,7 +105,7 @@ The connector offers 3 delivery modes:
 * Guaranteed    - a message is guaranteed to be delivered, but may be duplicated.
 * Synchronized  - a message is delivered exactly once.
 
-Delivery semantics are controlled by setting the db.delivery property in justone-pg-kafka-sink-json-1.0.properties.
+Delivery semantics are controlled by setting the db.delivery property in justone-kafka-sink-pg-json-1.0.properties.
 
 Note that the synchronized mode stores Kafka state in the database and if you subsequently run the connector in a non-synchronized mode
 (fastest or guaranteed) then any Kafka state for that table is discarded from the database.  
