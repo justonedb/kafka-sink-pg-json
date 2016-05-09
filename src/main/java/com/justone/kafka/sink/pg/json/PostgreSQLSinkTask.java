@@ -75,7 +75,7 @@ public class PostgreSQLSinkTask extends SinkTask {
    * Delivery configuration options
    */
   private static final String[] DELIVERY=new String[]{"FASTEST","GUARANTEED","SYNCHRONIZED"};
-   /**
+  /**
    * Database host server property key
    */
   public static final String HOST_CONFIG = "db.host";
@@ -201,8 +201,21 @@ public class PostgreSQLSinkTask extends SinkTask {
   public void start(Map<String, String> props) throws ConnectException {
     
     fLog.trace("Starting");
-    fLog.info("Sink connector config: ", props);
-
+    
+    /* log connector configuration */
+    String configuration="\n";
+    configuration=configuration+'\t'+HOST_CONFIG+':'+props.get(HOST_CONFIG)+'\n';
+    configuration=configuration+'\t'+DATABASE_CONFIG+':'+props.get(DATABASE_CONFIG)+'\n';
+    configuration=configuration+'\t'+USER_CONFIG+':'+props.get(USER_CONFIG)+'\n';
+    configuration=configuration+'\t'+PASSWORD_CONFIG+':'+props.get(PASSWORD_CONFIG)+'\n';
+    configuration=configuration+'\t'+SCHEMA_CONFIG+':'+props.get(SCHEMA_CONFIG)+'\n';
+    configuration=configuration+'\t'+TABLE_CONFIG+':'+props.get(TABLE_CONFIG)+'\n';
+    configuration=configuration+'\t'+COLUMN_CONFIG+':'+props.get(COLUMN_CONFIG)+'\n';
+    configuration=configuration+'\t'+PARSE_CONFIG+':'+props.get(PARSE_CONFIG)+'\n';
+    configuration=configuration+'\t'+BUFFER_CONFIG+':'+props.get(BUFFER_CONFIG)+'\n';
+    configuration=configuration+'\t'+DELIVERY_CONFIG+':'+props.get(DELIVERY_CONFIG)+'\n';
+    fLog.info("Sink connector configuration: " + configuration);
+    
     try {
 
       /* get configuration properties */
@@ -261,7 +274,7 @@ public class PostgreSQLSinkTask extends SinkTask {
           while (resultSet.next()) {//for each state row
             String topic=resultSet.getString(1);//get topic
             Integer partition=resultSet.getInt(2);//get partition number
-            Long offset=resultSet.getLong(3)+1;//get offset number
+            Long offset=resultSet.getLong(3);//get offset number
             offsetMap.put(new TopicPartition(topic,partition),offset);//append to map of offsets           
           }//for each partition
           resultSet.close();//be a good citizen
