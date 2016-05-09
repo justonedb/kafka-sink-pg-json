@@ -22,13 +22,13 @@ The connector provides configuration options for controlling:
 
 ### SQL files 
 
-* install-justone-pg-kafka-sink-1.0.sql
-* uninstall-justone-pg-kafka-sink-1.0.sql
+* install-justone-kafka-sink-pg-1.0.sql
+* uninstall-justone-kafka-sink-pg-1.0.sql
 
 ### Property files
 
-* justone-pg-sink-json-standalone.properties
-* justone-pg-sink-json-connector.properties
+* justone-kafka-sink-pg-json-standalone.properties
+* justone-kafka-sink-pg-json-connector.properties
 
 ### Jar files
 
@@ -41,22 +41,22 @@ The connector provides configuration options for controlling:
 
 * Place the jar files in the kafka library directory (libs)
 * Place the property files in the kafka configuration directory (config)
-* Install the package in the database using \i install-justone-pg-kafka-sink-1.0.sql from a psql session
+* Install the package in the database using \i install-justone-kafka-sink-pg-1.0.sql from a psql session
 
 Note that the package must be installed in each database the connector will be used with. If the package has not been installed in
 the database you will see an error of the form ERROR: schema "$justone$kafka$connect$sink" does not exist.
 
 ## Uninstall
 
-If you wish to uninstall the package from the database, you can use \i uninstall-justone-pg-kafka-sink-1.0.sql from a psql session
+If you wish to uninstall the package from the database, you can use \i uninstall-justone-kafka-sink-pg-1.0.sql from a psql session
 
 ## Usage
 
-Edit the justone-pg-sink-json-connector.properties file (see below) to configure the behaviour of the sink connector.
+Edit the justone-kafka-sink-pg-json-connector.properties file (see below) to configure the behaviour of the sink connector.
 
 To run the connector in standalone mode, use the following command from the Kafka home directory:
 
-bin/connect-standalone.sh config/justone-pg-sink-json-standalone.properties config/justone-pg-sink-json-connector.properties
+bin/connect-standalone.sh config/justone-kafka-sink-pg-json-standalone.properties config/justone-kafka-sink-pg-json-connector.properties
 
 To run the connector in distributed mode, see Kafka documentation.
 
@@ -77,12 +77,12 @@ The value converter used by Kafka connect should be StringConverter and the foll
 
 value.converter=org.apache.kafka.connect.storage.StringConverter
 
-This has already been set in the supplied justone-pg-sink-json-standalone.properties file - but you will likely 
+This has already been set in the supplied justone-kafka-sink-pg-json-standalone.properties file - but you will likely 
 need to modify the setting if using another property file for distributed mode.
 
 ### Sink Connector
 
-The sink connector properties (justone-pg-sink-json-connector.properties) are as follows:
+The sink connector properties (justone-kafka-sink-pg-json-connector.properties) are as follows:
 
 * tasks.max      - number of tasks to be assigned to the connector. Mandatory. Must be 1 or more.
 * topics         - topics to consume from. Mandatory.
