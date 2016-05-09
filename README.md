@@ -43,6 +43,9 @@ The connector provides configuration options for controlling:
 * Place the property files in the kafka configuration directory (config)
 * Install the package in the database using \i install-justone-pg-kafka-sink-1.0.sql from a psql session
 
+Note that the package must be installed in each database the connector will be used with. If the package has not been installed in
+the database you will see an error of the form ERROR: schema "$justone$kafka$connect$sink" does not exist.
+
 ## Uninstall
 
 If you wish to uninstall the package from the database, you can use \i uninstall-justone-pg-kafka-sink-1.0.sql from a psql session
@@ -62,6 +65,8 @@ Please note the following:
 * Only the value component of a message is parsed (if an optional key is provided, it is disregarded)
 * The connector does not use any schema information and will ignore any associated with a message
 * If a message contains no elements which can be reached by the configured parse paths then a row with all null columns is inserted into the table  
+
+Typically, a seperate topic is configured for each table. However, the connector can consume messages from multiple topics, but be aware that a message which does not contain any of the configured parse paths will cause a row with null columns to be inserted.  
 
 
 ## Configuration
