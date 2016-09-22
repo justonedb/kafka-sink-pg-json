@@ -163,6 +163,14 @@ public class PostgreSQLSinkTask extends SinkTask {
    * Sink table flush statement
    */
   private PreparedStatement iFlushStatement;
+  /**
+   * Sink schema
+   */
+  private String schema;
+  /**
+   * Sink table
+   */
+  private String table;
   
   /**
    * Constructor for sink task
@@ -223,8 +231,8 @@ public class PostgreSQLSinkTask extends SinkTask {
       String database=props.get(DATABASE_CONFIG);//database name
       String username=props.get(USER_CONFIG);//database username
       String password=props.get(PASSWORD_CONFIG);//database password
-      String schema=props.get(SCHEMA_CONFIG);//schema of table to sink to
-      String table=props.get(TABLE_CONFIG);//name of table to sink to
+      schema=props.get(SCHEMA_CONFIG);//schema of table to sink to
+      table=props.get(TABLE_CONFIG);//name of table to sink to
       String columnList=props.get(COLUMN_CONFIG);//columns to sink to
       Integer bufferSize=Integer.parseInt(props.get(BUFFER_CONFIG));//task buffer size
       String pathList=props.get(PARSE_CONFIG);//list if JSON parse paths
@@ -257,51 +265,56 @@ public class PostgreSQLSinkTask extends SinkTask {
       iWriter=new TableWriter(host,database,username,password,table,columns,bufferSize);//construct table writer
         
       iConnection=iWriter.getConnection();
-      Statement statement=iConnection.createStatement();
-      
-      if (iDelivery==SYNCHRONIZED) {//if synchonized delivery
+      iParser=new Parser();//construct parser
 
-        /* start sink session */
-        String start=SYNC_START.replace("<S>",schema).replace("<T>",table);//prepare start statement
+    } catch (NumberFormatException | IOException exception) {
+      throw new ConnectException(exception);//ho hum...
+    }//try{}
+
+  }//start()
+
+  public void open(Collection<TopicPartition> partitions) throws ConnectException {
+    try {
+      Statement statement = iConnection.createStatement();
+
+      if (iDelivery == SYNCHRONIZED) {//if synchronized delivery
+          /* start sink session */
+        String start = SYNC_START.replace("<S>", schema).replace("<T>", table);//prepare start statement
         statement.executeQuery(start);//perform start
-        
-        /* fetch table state */
-        String state=SYNC_STATE.replace("<S>",schema).replace("<T>",table);//prepare state query statement
-        ResultSet resultSet=statement.executeQuery(state);//perform state query
-        
+
+          /* fetch table state */
+        String state = SYNC_STATE.replace("<S>", schema).replace("<T>", table);//prepare state query statement
+        ResultSet resultSet = statement.executeQuery(state);//perform state query
+
         if (resultSet.isBeforeFirst()) {//if state is not empty
-          HashMap<TopicPartition,Long> offsetMap=new HashMap<>();//construct map of offsets
+          HashMap<TopicPartition, Long> offsetMap = new HashMap<>();//construct map of offsets
           while (resultSet.next()) {//for each state row
-            String topic=resultSet.getString(1);//get topic
-            Integer partition=resultSet.getInt(2);//get partition number
-            Long offset=resultSet.getLong(3);//get offset number
-            offsetMap.put(new TopicPartition(topic,partition),offset);//append to map of offsets           
+            String topic = resultSet.getString(1);//get topic
+            Integer partition = resultSet.getInt(2);//get partition number
+            Long offset = resultSet.getLong(3);//get offset number
+            offsetMap.put(new TopicPartition(topic, partition), offset);//append to map of offsets
+            fLog.info("resuming topic-parition {}-{} at offset {}", topic, partition, offset);
           }//for each partition
           resultSet.close();//be a good citizen
 
           iTaskContext.offset(offsetMap);//synchronise offsets
-          
+
         }//if state is not empty
-        
-        /* prepare flush statement */
-        String flush=SYNC_FLUSH.replace("<S>",schema).replace("<T>",table);//prepare flush statement
-        iFlushStatement=iConnection.prepareStatement(flush);//set flush statement
-      
+
+          /* prepare flush statement */
+        String flush = SYNC_FLUSH.replace("<S>", schema).replace("<T>", table);//prepare flush statement
+        iFlushStatement = iConnection.prepareStatement(flush);//set flush statement
+
       } else {//else non synchronised delivery
-        
-        /* drop synchronization state */
-        String drop=SYNC_DROP.replace("<S>",schema).replace("<T>",table);//prepare drop statement
+          /* drop synchronization state */
+        String drop = SYNC_DROP.replace("<S>", schema).replace("<T>", table);//prepare drop statement
         statement.executeQuery(drop);//perform drop
 
-      }//if synchonized delivery
-      
-      iParser=new Parser();//construct parser
-    
-    } catch (NumberFormatException | SQLException | IOException exception) {
-      throw new ConnectException(exception);//ho hum...
+      }//if synchronized delivery
+    } catch (SQLException exception) {
+      throw new ConnectException(exception);
     }//try{}
-    
-  }//start()
+  }//open()
 
   /**
    * Parses JSON value in each record and appends JSON elements to the table
