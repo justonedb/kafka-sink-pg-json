@@ -83,7 +83,7 @@ CREATE OR REPLACE FUNCTION "$justone$kafka$connect$sink".start(schemaName VARCHA
 BEGIN
 
   /* create tempporary sink table */
-  EXECUTE format('CREATE TEMPORARY TABLE %2$s AS SELECT * FROM "%1$s"."%2$s" WHERE FALSE',schemaName,tableName); 
+  EXECUTE format('CREATE TEMPORARY TABLE %2$s (LIKE "%1$s"."%2$s")',schemaName,tableName); 
 
   /* create state table if it does not exist */
   EXECUTE format('CREATE TABLE IF NOT EXISTS "$justone$kafka$connect$sink"."%1$s.%2$s" (kafka_topic VARCHAR NOT NULL, kafka_partition INTEGER NOT NULL, kafka_offset BIGINT NOT NULL) TABLESPACE pg_default', schemaName, tableName);
