@@ -1,3 +1,5 @@
+# *THIS REPOSITORY IS NO LONGER SUPPORTED*
+
 # kafka-sink-pg-json
 
 ## Description
