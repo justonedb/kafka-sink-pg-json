@@ -1,4 +1,4 @@
-# *THIS REPOSITORY IS NO LONGER SUPPORTED*
+# *THIS REPOSITORY IS NOT SUPPORTED*
 
 # kafka-sink-pg-json
 
@@ -195,7 +195,7 @@ Process flow is typically:
 
 ## Support
 
-Email support@justonedb.com for support.
+This repository is not supported. 
 
 ## Author
 
